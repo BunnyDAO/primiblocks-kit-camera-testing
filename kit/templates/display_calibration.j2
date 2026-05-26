@@ -53,65 +53,77 @@ vars:
   # ── Template overrides hiding primitive-internal vars from the user ──
   - name: user_name
     type: string
-    description: (internal — set per-include via {% raw %}{% with %}{% endraw %})
+    description: (internal — set per-include via Jinja {% raw %}{% with %}{% endraw %})
+    hidden: true
     default: ""
     required: false
   - name: pattern_setup_name
     type: string
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: ""
     required: false
   - name: tristimulus
     type: enum
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     enum: [TrisX, TrisY, TrisZ]
     default: TrisY
     required: false
   - name: full_view_mode
     type: bool
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: false
     required: false
   - name: max_dut_keystone
     type: float
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: 1.0
     required: false
   - name: show_edge_pixels
     type: int
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: 5
     required: false
   - name: moire_filter_threshold
     type: string
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: ""
     required: false
   - name: notes
     type: string
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: ""
     required: false
   - name: current_registration
     type: int
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     enum: [1, 2, 3]
     default: 1
     required: false
   - name: static_false_defects_file
     type: string
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: "RegisterPixelsFalseDefects.txt"
     required: false
   - name: xml_show_locs_foi_set_id
     type: int
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     enum: [0, 2]
     default: 0
     required: false
   - name: selected
     type: bool
-    description: (internal)
+    description: (internal — set per-include via Jinja {% with %})
+    hidden: true
     default: true
     required: false
 ---
