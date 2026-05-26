@@ -1,0 +1,460 @@
+---
+description: |
+  Demura SDC-N "Register Pixels" calibration step (used for G/R/B channels with
+  fine-grained demura analysis). Templatizes the 8 fields that vary between the
+  3 color-channel instances; the other ~318 fields are baked in from the
+  reference .seqxc.
+vars:
+  - name: user_name
+    type: string
+    description: User-facing name and step name (e.g., "Register Pixels G").
+  - name: pattern_setup_name
+    type: string
+    description: Name of the pattern setup to use (e.g., "G255", "R255", "B255").
+  - name: tristimulus
+    type: enum
+    description: Tristimulus channel to capture (also used for SelectXYZ).
+    enum: [TrisX, TrisY, TrisZ]
+  - name: full_view_mode
+    type: bool
+    description: Whether to use full view mode (typically true only for green).
+    default: false
+    required: false
+  - name: max_dut_keystone
+    type: float
+    description: Maximum allowed DUT keystone distortion.
+    min: 0.0
+    max: 10.0
+    default: 1.0
+    required: false
+  - name: show_edge_pixels
+    type: int
+    description: Edge pixel count for display overlay.
+    min: 1
+    max: 100
+    default: 5
+    required: false
+  - name: moire_filter_threshold
+    type: string
+    description: Moire filter params (comma-separated). Empty for green channel.
+    default: ""
+    required: false
+  - name: selected
+    type: bool
+    description: Whether this step is enabled in the sequence.
+    default: true
+    required: false
+---
+<SequenceItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Selected>{{ selected | lower }}</Selected>
+      <PatternSetupName>{{ pattern_setup_name }}</PatternSetupName>
+      <Analysis xsi:type="DemuraSdcN.RegisterPixelsSdcN">
+        <UserName>{{ user_name }}</UserName>
+        <Notes />
+        <MeasureElapsedTime>false</MeasureElapsedTime>
+        <MaxScaleValue>100</MaxScaleValue>
+        <MinScaleValue>0</MinScaleValue>
+        <FalseColorOptions>MinToMax</FalseColorOptions>
+        <SkipFinalResultControlUpdate>false</SkipFinalResultControlUpdate>
+        <DependencyEnabled>false</DependencyEnabled>
+        <DeterminingStepGUID />
+        <ExecuteOnResult>None</ExecuteOnResult>
+        <DependencyResultOnly>false</DependencyResultOnly>
+        <IProcessStep_Name>{{ user_name }}</IProcessStep_Name>
+        <UseJJJLC>false</UseJJJLC>
+        <UseJJJSmooth>false</UseJJJSmooth>
+        <SaveNewDynamicFalseDefects>false</SaveNewDynamicFalseDefects>
+        <PreStep>0</PreStep>
+        <XMLMASKFOISETID>0</XMLMASKFOISETID>
+        <CameraDistanceM>0</CameraDistanceM>
+        <DUTZOffsetM>0</DUTZOffsetM>
+        <RotAngleDegHoriz>0</RotAngleDegHoriz>
+        <RotAngleDegVert>0</RotAngleDegVert>
+        <Rotation>None</Rotation>
+        <DarkMarkContrastThreshold>3.5</DarkMarkContrastThreshold>
+        <MinDarkMarkPixels>150</MinDarkMarkPixels>
+        <DarkMarkDilationSize>4,4</DarkMarkDilationSize>
+        <NumNonZeroDarkMarkPixels>24</NumNonZeroDarkMarkPixels>
+        <DarkMarkMaxRadius>10</DarkMarkMaxRadius>
+        <DarkMarkRegionUnits>Percent</DarkMarkRegionUnits>
+        <DarkMarkRegionTop>70</DarkMarkRegionTop>
+        <DarkMarkRegionBottom>90</DarkMarkRegionBottom>
+        <DarkMarkRegionLeft>5</DarkMarkRegionLeft>
+        <DarkMarkRegionRight>25</DarkMarkRegionRight>
+        <InterpolateBoundingBox>true</InterpolateBoundingBox>
+        <AllowRemoveDarkMarks>false</AllowRemoveDarkMarks>
+        <ShowDarkMarkProcessing>false</ShowDarkMarkProcessing>
+        <RemoveDarkMarks>None</RemoveDarkMarks>
+        <ChannelBoundsThreshold>0</ChannelBoundsThreshold>
+        <MinPanelLuminance>0</MinPanelLuminance>
+        <MaxPanelLuminance>0</MaxPanelLuminance>
+        <MinPanelLuminanceVDmm>0,0</MinPanelLuminanceVDmm>
+        <MaxPanelStdDevOverLum>0</MaxPanelStdDevOverLum>
+        <MaxPanelStdDevOverLumVDPixels>0,0</MaxPanelStdDevOverLumVDPixels>
+        <ReportRADASize>false</ReportRADASize>
+        <Register>None</Register>
+        <CurrentRegistration />
+        <CropMode>CorrectDistortion</CropMode>
+        <CropThreshold>20</CropThreshold>
+        <RadaCircleDiameterMM>0</RadaCircleDiameterMM>
+        <RemoveSmallBlobs>0</RemoveSmallBlobs>
+        <DisplayPixels>0,0</DisplayPixels>
+        <RegistrationFile>Registration.bin</RegistrationFile>
+        <UserRegistrationPointsFile />
+        <DisplayPixelDetectorSize>3,3</DisplayPixelDetectorSize>
+        <RefineDetectorSize>15,1</RefineDetectorSize>
+        <ShowColLocations />
+        <ShowRowLocations />
+        <RemoveDistortion>false</RemoveDistortion>
+        <RDP_SubPixelOffset>0, 0</RDP_SubPixelOffset>
+        <RDP_PostSmoothFilterSize>0,0</RDP_PostSmoothFilterSize>
+        <RDP_PostSmoothFilterThreshold>20</RDP_PostSmoothFilterThreshold>
+        <RDP_InitialCorner>UL</RDP_InitialCorner>
+        <RDP_InitialEdge>Top</RDP_InitialEdge>
+        <RDP_IsQuadrant>false</RDP_IsQuadrant>
+        <RDP_DisplayPixelSizeMM>0,0</RDP_DisplayPixelSizeMM>
+        <DisplayPixelsOffset>0,0</DisplayPixelsOffset>
+        <RegDisplaySizeMM>0,0</RegDisplaySizeMM>
+        <Origin>Default</Origin>
+        <DisplayPixelOrigin>false</DisplayPixelOrigin>
+        <ImageSize>0,0</ImageSize>
+        <RotateAngleDeg>0</RotateAngleDeg>
+        <AdditionalCropping>2, 2, 2, 2</AdditionalCropping>
+        <AdjustCorners />
+        <AddBuffer>110,110,120,120</AddBuffer>
+        <AdditionalCroppingUnits>Pixels</AdditionalCroppingUnits>
+        <CropDelay>0</CropDelay>
+        <SaveRegisteredMeasurementToDatabase>false</SaveRegisteredMeasurementToDatabase>
+        <AutoSearch>false</AutoSearch>
+        <SaveCurrentRADA>true</SaveCurrentRADA>
+        <ThresholdDarkAreas>false</ThresholdDarkAreas>
+        <MinDarkAreaSize>100</MinDarkAreaSize>
+        <ThresholdDarkPercentage>40</ThresholdDarkPercentage>
+        <RepairDarkAreas>false</RepairDarkAreas>
+        <MaskInactivePixelsLC>false</MaskInactivePixelsLC>
+        <DilateDarkAreas>10</DilateDarkAreas>
+        <RepairFilterSize>10,10</RepairFilterSize>
+        <OneActiveArea>false</OneActiveArea>
+        <RADAPassUniformity>0</RADAPassUniformity>
+        <RADAPassOverlap>0</RADAPassOverlap>
+        <RADAPassBrightOverlap>0</RADAPassBrightOverlap>
+        <RADAPassOverlapNumPix>0</RADAPassOverlapNumPix>
+        <RADAPassOverlapOffset>0,0,0,0</RADAPassOverlapOffset>
+        <RADAPassDisplaySizeMM>0,0</RADAPassDisplaySizeMM>
+        <RADAPassDisplaySizeMaxErrorMM>-1</RADAPassDisplaySizeMaxErrorMM>
+        <RIDA_DetectorSizeMM>0</RIDA_DetectorSizeMM>
+        <RIDA_DisplaySizeMM>0,0</RIDA_DisplaySizeMM>
+        <RIDA_DetectorSizeDeg>0</RIDA_DetectorSizeDeg>
+        <RIDA_DisplaySizeDeg>0,0</RIDA_DisplaySizeDeg>
+        <RIDA_CorrectDistortion>false</RIDA_CorrectDistortion>
+        <RIDA_InterpolateDuringRotate>true</RIDA_InterpolateDuringRotate>
+        <RIDA_MarginPixels>3</RIDA_MarginPixels>
+        <RIDA_MaxRotAngleDeg>2</RIDA_MaxRotAngleDeg>
+        <RIDA_MaxSizeErrorMM>3</RIDA_MaxSizeErrorMM>
+        <RIDA_MaxSizeErrorDeg>3</RIDA_MaxSizeErrorDeg>
+        <RIDA_MaxIterations>7</RIDA_MaxIterations>
+        <RIDA_FixtureTollerance>10</RIDA_FixtureTollerance>
+        <RIDA_FixtureTolleranceDeg>10</RIDA_FixtureTolleranceDeg>
+        <RIDA_DistanceFromCenterPctHorz>20</RIDA_DistanceFromCenterPctHorz>
+        <RIDA_DistanceFromCenterPctVert>20</RIDA_DistanceFromCenterPctVert>
+        <RIDA_IsBezel>false</RIDA_IsBezel>
+        <RIDA_RightBezelWidth>0</RIDA_RightBezelWidth>
+        <RIDA_TopBezelWidth>0</RIDA_TopBezelWidth>
+        <RIDA_BottomBezelWidth>0</RIDA_BottomBezelWidth>
+        <RIDA_LeftBezelWidth>0</RIDA_LeftBezelWidth>
+        <RIDA_RefineEdges>true</RIDA_RefineEdges>
+        <RIDA_RibbonMethod>false</RIDA_RibbonMethod>
+        <RIDA_Discorectangle>false</RIDA_Discorectangle>
+        <RIDA_RobustMode>false</RIDA_RobustMode>
+        <RIDA_NumberNeighborPixels>7</RIDA_NumberNeighborPixels>
+        <RIDA_RobustScanLineThreshold>90</RIDA_RobustScanLineThreshold>
+        <XMLMASKFOISETID_RADA>0</XMLMASKFOISETID_RADA>
+        <RIDA_RobustFastMethod>true</RIDA_RobustFastMethod>
+        <RIDA_ScanLineNumberPixels>150</RIDA_ScanLineNumberPixels>
+        <RIDA_RobustFilterSize>21</RIDA_RobustFilterSize>
+        <RIDA_PointsPerEdge>7, 7, 7, 7</RIDA_PointsPerEdge>
+        <RIDA_UseDynamicThresholding>true</RIDA_UseDynamicThresholding>
+        <ManualBounds />
+        <ManualBoundsEnabled>false</ManualBoundsEnabled>
+        <UseCurrentFromObjRepository>false</UseCurrentFromObjRepository>
+        <OffsetOrigin>0,0</OffsetOrigin>
+        <XMLRegisterEdgeFoIsetID>-1</XMLRegisterEdgeFoIsetID>
+        <RegisterEdge_EdgeOffset>0, 0, 0, 0</RegisterEdge_EdgeOffset>
+        <RegisterEdgeRotationOnly>false</RegisterEdgeRotationOnly>
+        <Threshold>2</Threshold>
+        <_RemoveMoire>None</_RemoveMoire>
+        <AxisThresholdPct>75</AxisThresholdPct>
+        <CenterLineWidth>1</CenterLineWidth>
+        <DilateBlockPct>1,1</DilateBlockPct>
+        <GlobalThresholdPct>1500</GlobalThresholdPct>
+        <LocalThresholdPct>75</LocalThresholdPct>
+        <MinFrequencyPct>2</MinFrequencyPct>
+        <MoireRegionFilterName />
+        <SavedFilterDescription />
+        <FilterGUID />
+        <MaxMoirePixels>0</MaxMoirePixels>
+        <MeasurementPart>None</MeasurementPart>
+        <StrayLight>0</StrayLight>
+        <SetResolution />
+        <MoirePreFilter />
+        <SelectXYZ>{{ tristimulus }}</SelectXYZ>
+        <ScalerOffset />
+        <DUTSizeUnit>Pixels</DUTSizeUnit>
+        <NomimalDUTSize>5676, 12332</NomimalDUTSize>
+        <MaxDUTSizeError>10,10</MaxDUTSizeError>
+        <MinSubFrameMargin>0</MinSubFrameMargin>
+        <FocusDetectorSize>0,0</FocusDetectorSize>
+        <MinFocusValue>82</MinFocusValue>
+        <SaveMTFtoDatabase>false</SaveMTFtoDatabase>
+        <RegisterMode>RegisterNew</RegisterMode>
+        <SubPixelLayout>Uniform</SubPixelLayout>
+        <Tristimulus>{{ tristimulus }}</Tristimulus>
+        <WriteLocationsToCsvFile>false</WriteLocationsToCsvFile>
+        <ApplyRADA>false</ApplyRADA>
+        <PixelResolution>0.2</PixelResolution>
+        <FractionalMethod>Pointer</FractionalMethod>
+        <FractionalMethod_Vector_RowMajor>false</FractionalMethod_Vector_RowMajor>
+        <FractionalMethod_Vector_Bound>true</FractionalMethod_Vector_Bound>
+        <UseParallel>Full</UseParallel>
+        <MaxRefine>0</MaxRefine>
+        <SubPixelOffsetMM>0, 0</SubPixelOffsetMM>
+        <UserData />
+        <EdgeOffset>0, 0, 0, 0</EdgeOffset>
+        <EdgeMargin>0.25</EdgeMargin>
+        <Edges>L,R,T,B</Edges>
+        <NumDisplayPixels>1320,2868</NumDisplayPixels>
+        <NumModules>0,0</NumModules>
+        <PixelPitchMM>4.3,4.3</PixelPitchMM>
+        <PixelSpacing>2,2</PixelSpacing>
+        <SpacingOffset>0,0</SpacingOffset>
+        <InitialPixel>ImageCenter</InitialPixel>
+        <MaxLocError>0, 0</MaxLocError>
+        <MaxLocErrorPP>0, 0</MaxLocErrorPP>
+        <DarkPixelThreshold>5</DarkPixelThreshold>
+        <InitialPixelLocation>0,0</InitialPixelLocation>
+        <InitialPixelCoordinate>0,0</InitialPixelCoordinate>
+        <CornerEdgeOffset>0, 0</CornerEdgeOffset>
+        <InitialScanDirection>Horizontal</InitialScanDirection>
+        <SPROrientation>Vertical</SPROrientation>
+        <SPR_G_Type>RB</SPR_G_Type>
+        <InitialOffsetDirection>0</InitialOffsetDirection>
+        <RegisterDetectorSizeUnits>Pixels</RegisterDetectorSizeUnits>
+        <RegisterDetectorSize>4.3,4.3</RegisterDetectorSize>
+        <RegisterDetectorShape>Circle</RegisterDetectorShape>
+        <ColDetectorSize>60</ColDetectorSize>
+        <RowDetectorSize>0</RowDetectorSize>
+        <ComputeErrorMap>false</ComputeErrorMap>
+        <PixelCropThreshold>60</PixelCropThreshold>
+        <CentroidThreshold>-5</CentroidThreshold>
+        <Rotate>None</Rotate>
+        <RotateAngle>0</RotateAngle>
+        <XmlRotateFoIsetID>0</XmlRotateFoIsetID>
+        <XmlPostRegFoIsetID>0</XmlPostRegFoIsetID>
+        <PreFilterList>
+          <FilterList>
+            <UDIRFilter xsi:type="RegisterPixels.UDIRFilter">
+              <Selected>false</Selected>
+              <Browsable>true</Browsable>
+              <Description>UDIR</Description>
+              <Notes />
+              <UserName />
+              <RowColor>Transparent</RowColor>
+              <SaveToDatabase>false</SaveToDatabase>
+              <DelayMilliseconds>0</DelayMilliseconds>
+              <OpenNewWindow>false</OpenNewWindow>
+              <ElapsedMilliseconds>0</ElapsedMilliseconds>
+              <SequenceMode>Synchronous</SequenceMode>
+              <Guid />
+              <ShapeFileName>x3442_P1_PixelMask_Green</ShapeFileName>
+              <DetectorSize>0,0</DetectorSize>
+              <SubtractAAfraction>0</SubtractAAfraction>
+              <NormalizeInsideDist>0</NormalizeInsideDist>
+              <NormalizeOutsideDist>0</NormalizeOutsideDist>
+              <EdgePixelDetector>0</EdgePixelDetector>
+              <PreSmoothFilterSize>0,0</PreSmoothFilterSize>
+              <PreSmoothDilateDetectorSize>0</PreSmoothDilateDetectorSize>
+              <PostSmoothFilterSize>0,0</PostSmoothFilterSize>
+              <DetectorShape>None</DetectorShape>
+              <ActivePixelValue>127</ActivePixelValue>
+              <MaskInactive>false</MaskInactive>
+              <RestoreInactive>false</RestoreInactive>
+              <NormalizeTo>Camera</NormalizeTo>
+              <SPRCopy>false</SPRCopy>
+              <ScaleUDIR>0</ScaleUDIR>
+              <ScaleUDIRedge>0</ScaleUDIRedge>
+              <MaxRefine>0</MaxRefine>
+              <UDIRPreMoireFilter />
+              <UDIRMoireFilter />
+              <UDIRPostMoireFilter />
+              <GradientFilterSize>0,0</GradientFilterSize>
+              <CsvEdgeNormFilename />
+              <CsvScaleFilename />
+              <BTStrayLightFactors>0, 0</BTStrayLightFactors>
+              <PostSmoothOutside>0, 0, 0</PostSmoothOutside>
+              <ScaleEdgesOutside>0, 0, 0</ScaleEdgesOutside>
+              <ReplaceOutsideEdgeDetector>0</ReplaceOutsideEdgeDetector>
+              <ReplaceEdgesOutside>0</ReplaceEdgesOutside>
+              <NormalizeEdgesOutside>0</NormalizeEdgesOutside>
+              <BT_NormFilename />
+              <BT_OFFDescription />
+              <XmlBTFOIsetID>0</XmlBTFOIsetID>
+              <BrightThreshold>0</BrightThreshold>
+              <DarkThreshold>0</DarkThreshold>
+              <ReplaceRefPixels>0</ReplaceRefPixels>
+              <FOIBrightThreshold>0</FOIBrightThreshold>
+              <FOIDarkThreshold>0</FOIDarkThreshold>
+              <XmlReplaceFOIsetID>0</XmlReplaceFOIsetID>
+              <MinMaxEdgeNormalization>0, 0</MinMaxEdgeNormalization>
+              <DrawColorInactive>Gray</DrawColorInactive>
+              <ExportActiveValues>false</ExportActiveValues>
+              <Offset>0,0</Offset>
+              <OpenNewWindow1>false</OpenNewWindow1>
+              <Mode>Normal</Mode>
+              <FillMode>ActiveAvg</FillMode>
+              <FalseDefectSource />
+            </UDIRFilter>
+          </FilterList>
+          <PropertyName />
+          <Enabled>true</Enabled>
+          <MeasurementName />
+          <UserName />
+          <BackColor>Control</BackColor>
+          <MaxDefects>-1</MaxDefects>
+        </PreFilterList>
+        <CameraReplaceRowsList />
+        <CameraReplaceColsList />
+        <DelaySec>0</DelaySec>
+        <ShowEdgePixels>{{ show_edge_pixels }}</ShowEdgePixels>
+        <ShowColumns />
+        <ShowRows />
+        <XmlShowLocsFoIsetID>2</XmlShowLocsFoIsetID>
+        <SigmaLimits>0, 0</SigmaLimits>
+        <EdgeCompensation>0</EdgeCompensation>
+        <MinPanelLumSTR>0</MinPanelLumSTR>
+        <MaxPanelLum>0</MaxPanelLum>
+        <AspectRatio>0,0</AspectRatio>
+        <BinLevel>0,0</BinLevel>
+        <CosineCorrection />
+        <LensVignetting />
+        <MultipointScalingParams />
+        <LinearityCorrectionData />
+        <CenterLineDetector>0, 0</CenterLineDetector>
+        <VHGradientFilter>0, 0</VHGradientFilter>
+        <ViewAngleCorrection />
+        <ScaleLuminance>true</ScaleLuminance>
+        <DetectorSizeUnits>Pixels</DetectorSizeUnits>
+        <DetectorSize>4.3,4.3</DetectorSize>
+        <DetectorShape>None</DetectorShape>
+        <EdgeFactorsOdd />
+        <EdgeFactorsEven />
+        <EdgeFactorsCorners />
+        <PreSmoothFilterSize>0,0</PreSmoothFilterSize>
+        <PreSmoothRegion />
+        <PreSmoothMask />
+        <PostSmoothFilterSize>0,0</PostSmoothFilterSize>
+        <GradientFilterSize>0,0</GradientFilterSize>
+        <SaveToDatabase>false</SaveToDatabase>
+        <SaveToDatabaseNameType>MeasurementSetup</SaveToDatabaseNameType>
+        <SaveRawToDatabase>false</SaveRawToDatabase>
+        <SaveRawToDatabaseNameType>MeasurementSetup</SaveRawToDatabaseNameType>
+        <WriteToFileBinLevel>0,0</WriteToFileBinLevel>
+        <ExportDataType>Luminance</ExportDataType>
+        <WriteToFile>None</WriteToFile>
+        <WriteToFileFilename />
+        <WriteToFileRefSize>
+          <Width>0</Width>
+          <Height>0</Height>
+        </WriteToFileRefSize>
+        <WriteToFileRefPos>
+          <Width>0</Width>
+          <Height>0</Height>
+        </WriteToFileRefPos>
+        <WriteToFileScale>0</WriteToFileScale>
+        <SaveBinaryHeader>true</SaveBinaryHeader>
+        <SuperHotPixelThreshold>0</SuperHotPixelThreshold>
+        <HugeValue>0</HugeValue>
+        <SubtractCameraRows />
+        <ContrastAdjustment />
+        <RemoveCCDLines />
+        <RemoteDataFolder />
+        <ImportCSVFile />
+        <MaxLvScale>0</MaxLvScale>
+        <Gamma>2.2</Gamma>
+        <WriteImageFile>None</WriteImageFile>
+        <WriteImageFileFolder />
+        <WriteImageFileFolderType>false</WriteImageFileFolderType>
+        <WriteImageFileLCRange />
+        <PassFailPOIPoints>false</PassFailPOIPoints>
+        <XMLPOISETID>0</XMLPOISETID>
+        <CreateSynthetic>true</CreateSynthetic>
+        <WriteCameraImageFileFolder />
+        <WriteCameraImageFile>None</WriteCameraImageFile>
+        <FlatFieldCorrection />
+        <ReplaceRawNegatives>false</ReplaceRawNegatives>
+        <ShowRegistrationCircles>true</ShowRegistrationCircles>
+        <EdgeWeakSmoothing>0,0,0,0</EdgeWeakSmoothing>
+        <SmoothSizeLR>3,3</SmoothSizeLR>
+        <SmoothSizeTB>1,2</SmoothSizeTB>
+        <EdgeAttenDist>0</EdgeAttenDist>
+        <EdgeAttenMethod>None</EdgeAttenMethod>
+        <XmlfFilename />
+        <MoireFilterThreshold>{{ moire_filter_threshold }}</MoireFilterThreshold>
+        <Padding />
+        <MoireFilterDarkPixelThreshold>0</MoireFilterDarkPixelThreshold>
+        <StaticFalseDefectThresholdSynthetic>0</StaticFalseDefectThresholdSynthetic>
+        <StaticFalseDefectsReportSynthetic>false</StaticFalseDefectsReportSynthetic>
+        <StaticFalseDefectsReportCamera>false</StaticFalseDefectsReportCamera>
+        <StaticFalseDefectsReportCameraFalseDefects>false</StaticFalseDefectsReportCameraFalseDefects>
+        <StaticFalseDefectsFileName>RegisterPixelsFalseDefects.txt</StaticFalseDefectsFileName>
+        <StaticFalseDefectThreshold>0</StaticFalseDefectThreshold>
+        <RemoveStaticFalseDefects>None</RemoveStaticFalseDefects>
+        <StaticFalseDefectAbnormalSize>0</StaticFalseDefectAbnormalSize>
+        <FalseDefectsRemoveMode>Synthetic</FalseDefectsRemoveMode>
+        <RemoveDynamicFalseDefectsSteps />
+        <SaveNewFalseDefects>false</SaveNewFalseDefects>
+        <FalseDefectsDarkThreshold>0</FalseDefectsDarkThreshold>
+        <FalseDefectsEdgeMask />
+        <LCDetectorSize>15,15</LCDetectorSize>
+        <FalseDefectsBrightThreshold>0</FalseDefectsBrightThreshold>
+        <MinDarkBlobsSize>1, 0</MinDarkBlobsSize>
+        <MinBrightBlobsSize>1, 0</MinBrightBlobsSize>
+        <DilateFalseDefects>0</DilateFalseDefects>
+        <CompareFalseDefectsStepsStr />
+        <FindFalseDefectLines>true</FindFalseDefectLines>
+        <VerticalBandData />
+        <InterpolatePixels>None</InterpolatePixels>
+        <PadDutCols />
+        <XMLSCALELVFOISETID>0</XMLSCALELVFOISETID>
+        <ScaleLvFactor>0</ScaleLvFactor>
+        <ScaleRefAndOffset>0,0</ScaleRefAndOffset>
+        <XMLPOSTMASKFOISETID>0</XMLPOSTMASKFOISETID>
+        <BitmapMaskFileName />
+        <SyntheticReplaceRowsList />
+        <SyntheticReplaceColsList />
+        <ReplaceNegatives>false</ReplaceNegatives>
+        <CornerRadiusMM>0</CornerRadiusMM>
+        <InterpolationOptimization>Legacy</InterpolationOptimization>
+        <FrequencyFilterFileName />
+        <EnableFocus>true</EnableFocus>
+        <MTFLogScale>false</MTFLogScale>
+        <MTFSumMethod>Cols</MTFSumMethod>
+        <FocusDetectorSizeKrN>20, 20</FocusDetectorSizeKrN>
+        <XmMTFFoIsetID>0</XmMTFFoIsetID>
+        <FocusRoISize>0</FocusRoISize>
+        <MinFoIUniformity>0</MinFoIUniformity>
+        <MaxFocusValue>0</MaxFocusValue>
+        <MaxDUTLv>-1</MaxDUTLv>
+        <MinDUTLv>0</MinDUTLv>
+        <MinRegPatternContrast>0</MinRegPatternContrast>
+        <MinRegPatternContrastSaveOnFailure>false</MinRegPatternContrastSaveOnFailure>
+        <EnableAlignment>true</EnableAlignment>
+        <MaxDUTKeystone>{{ max_dut_keystone }}</MaxDUTKeystone>
+        <MaxDUTRotAngle>0.05</MaxDUTRotAngle>
+        <MinDUTRotAngle>0</MinDUTRotAngle>
+        <NomimalDUTCenter>0, 0</NomimalDUTCenter>
+        <MaxDUTShift>15,15</MaxDUTShift>
+        <FullViewMode>{{ full_view_mode | lower }}</FullViewMode>
+      </Analysis>
+      <GUID>1faf122d-9fea-487d-bcce-e5de2dc9c333</GUID>
+    </SequenceItem>
+    

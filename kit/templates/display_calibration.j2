@@ -1,0 +1,164 @@
+---
+description: |
+  Display calibration .seqxc sequence reproducing the structure of the reference
+  A264_B_v0.37_260318.seqxc. Composes 3 SDC-N register-pixel items (one per color
+  channel), a light source measurement, N x 3 synthetic measurement items (one
+  per measurement point x 3 color channels), and a final demura TIF computation.
+
+  User-facing inputs are kept minimal: the measurement-point list (each with a
+  pattern setup name + notes prefix), the final demura pattern setup, and a few
+  per-channel knobs. All primitive-internal vars are template-overridden as
+  required: false so the fill-skill doesn't ask the user about them; they get
+  set per-include via Jinja's {% with %} blocks.
+primitives:
+  - register_pixels_sdcn
+  - register_pixels
+  - demura_tif_async
+  - _seqx_pattern_setup_list
+  - _seqx_foi_manager
+vars:
+  # ── User-facing inputs ────────────────────────────────────────────────
+  - name: measurement_points
+    type: list
+    description: |
+      Measurement points to run synthetic G/R/B captures against. Each entry
+      is a dict with `pattern_setup` (string, e.g. "W373_DBV650") and
+      `notes_prefix` (string, e.g. "Gray373"). Optional keys: `current_registration`
+      (int 1-3, default 1), `static_false_defects_file` (string),
+      `xml_show_locs_foi_set_id` (0 or 2, default 0).
+    min: 1
+  - name: final_demura_pattern_setup
+    type: string
+    description: PatternSetupName for the trailing Demura TIF Async step (e.g., "W373_DBV650").
+  - name: xml_version
+    type: string
+    description: XmlVersion declared at the sequence root.
+    default: "1.8"
+    required: false
+  - name: channel_index
+    type: int
+    description: ChannelIndex value (typically 0 for primary channel).
+    default: 0
+    required: false
+  - name: g_max_dut_keystone
+    type: float
+    description: Max DUT keystone for the G channel (R/B use a separate value).
+    default: 0.04
+    required: false
+  - name: rb_max_dut_keystone
+    type: float
+    description: Max DUT keystone for the R and B channels.
+    default: 1.0
+    required: false
+  # ── Template overrides hiding primitive-internal vars from the user ──
+  - name: user_name
+    type: string
+    description: (internal — set per-include via {% raw %}{% with %}{% endraw %})
+    default: ""
+    required: false
+  - name: pattern_setup_name
+    type: string
+    description: (internal)
+    default: ""
+    required: false
+  - name: tristimulus
+    type: enum
+    description: (internal)
+    enum: [TrisX, TrisY, TrisZ]
+    default: TrisY
+    required: false
+  - name: full_view_mode
+    type: bool
+    description: (internal)
+    default: false
+    required: false
+  - name: max_dut_keystone
+    type: float
+    description: (internal)
+    default: 1.0
+    required: false
+  - name: show_edge_pixels
+    type: int
+    description: (internal)
+    default: 5
+    required: false
+  - name: moire_filter_threshold
+    type: string
+    description: (internal)
+    default: ""
+    required: false
+  - name: notes
+    type: string
+    description: (internal)
+    default: ""
+    required: false
+  - name: current_registration
+    type: int
+    description: (internal)
+    enum: [1, 2, 3]
+    default: 1
+    required: false
+  - name: static_false_defects_file
+    type: string
+    description: (internal)
+    default: "RegisterPixelsFalseDefects.txt"
+    required: false
+  - name: xml_show_locs_foi_set_id
+    type: int
+    description: (internal)
+    enum: [0, 2]
+    default: 0
+    required: false
+  - name: selected
+    type: bool
+    description: (internal)
+    default: true
+    required: false
+---
+<?xml version="1.0" encoding="utf-8"?>
+<Sequence xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="">
+  <XmlVersion>{{ xml_version }}</XmlVersion>
+  <ChannelIndex>{{ channel_index }}</ChannelIndex>
+  <ChannelActive>true</ChannelActive>
+  <Items>
+{# 3x RegisterPixelsSdcN — one per color channel (G, R, B). #}
+{% for ch in [
+  {"label": "G", "tristimulus": "TrisY", "full_view": true,  "max_keystone": g_max_dut_keystone,  "show_edge": 5, "moire": "",                                  "pattern_setup": "G255"},
+  {"label": "R", "tristimulus": "TrisX", "full_view": false, "max_keystone": rb_max_dut_keystone, "show_edge": 9, "moire": "150, 150, 150, 4, 40, 0, 100, 100", "pattern_setup": "R255"},
+  {"label": "B", "tristimulus": "TrisZ", "full_view": false, "max_keystone": rb_max_dut_keystone, "show_edge": 5, "moire": "150, 150, 150, 4, 40, 0, 100, 100", "pattern_setup": "B255"}
+] %}
+{% with user_name="Register Pixels " + ch.label, pattern_setup_name=ch.pattern_setup, tristimulus=ch.tristimulus, full_view_mode=ch.full_view, max_dut_keystone=ch.max_keystone, show_edge_pixels=ch.show_edge, moire_filter_threshold=ch.moire %}
+{% include "primitives/register_pixels_sdcn.j2" %}
+{% endwith %}
+{% endfor %}
+
+{# Light source measurement (single fixed entry). #}
+{% with user_name="Light Source", pattern_setup_name="w1", notes="Gray1 (ImageCenter)", tristimulus="TrisY", current_registration=1, static_false_defects_file="RegisterPixelsFalseDefects.txt", xml_show_locs_foi_set_id=0 %}
+{% include "primitives/register_pixels.j2" %}
+{% endwith %}
+
+{# Synthetic G/R/B measurements per measurement point. #}
+{% for point in measurement_points %}
+{% for color in [
+  {"label": "G", "tristimulus": "TrisY"},
+  {"label": "R", "tristimulus": "TrisX"},
+  {"label": "B", "tristimulus": "TrisZ"}
+] %}
+{% with user_name="Synthetic " + color.label, pattern_setup_name=point.pattern_setup, notes=point.notes_prefix + " (ImageCenter)", tristimulus=color.tristimulus, current_registration=point.get("current_registration", 1), static_false_defects_file=point.get("static_false_defects_file", "RegisterPixelsFalseDefects.txt"), xml_show_locs_foi_set_id=point.get("xml_show_locs_foi_set_id", 0) %}
+{% include "primitives/register_pixels.j2" %}
+{% endwith %}
+{% endfor %}
+{% endfor %}
+
+{# Final demura TIF SDC Async (single fixed step). #}
+{% with user_name="Demura Tif SDC Async", pattern_setup_name=final_demura_pattern_setup %}
+{% include "primitives/demura_tif_async.j2" %}
+{% endwith %}
+  </Items>
+{% include "primitives/_seqx_pattern_setup_list.j2" %}
+{% include "primitives/_seqx_foi_manager.j2" %}
+  <ModelName></ModelName>
+  <NumUnitsTested>0</NumUnitsTested>
+  <NumUnitsFailed>0</NumUnitsFailed>
+  <CameraDistanceM>0</CameraDistanceM>
+</Sequence>

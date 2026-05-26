@@ -1,0 +1,117 @@
+---
+description: |
+  Demura TIF SDC Mobile (async) — final demura computation step. Used once at
+  the end of the calibration sequence. Templatizes user_name and pattern_setup
+  only; everything else is baked in from the reference.
+vars:
+  - name: user_name
+    type: string
+    description: User-facing step name (e.g., "Demura Tif SDC Async").
+    default: "Demura Tif SDC Async"
+    required: false
+  - name: pattern_setup_name
+    type: string
+    description: Pattern setup to use for the demura computation.
+  - name: selected
+    type: bool
+    description: Whether this step is enabled in the sequence.
+    default: true
+    required: false
+---
+<SequenceItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Selected>{{ selected | lower }}</Selected>
+      <PatternSetupName>{{ pattern_setup_name }}</PatternSetupName>
+      <Analysis xsi:type="DemuraSdcN.DemuraTifSdcMobile_Async">
+        <UserName>{{ user_name }}</UserName>
+        <Notes />
+        <MeasureElapsedTime>false</MeasureElapsedTime>
+        <MaxScaleValue>100</MaxScaleValue>
+        <MinScaleValue>0</MinScaleValue>
+        <FalseColorOptions>MinToMax</FalseColorOptions>
+        <SkipFinalResultControlUpdate>false</SkipFinalResultControlUpdate>
+        <DependencyEnabled>false</DependencyEnabled>
+        <DeterminingStepGUID />
+        <ExecuteOnResult>None</ExecuteOnResult>
+        <DependencyResultOnly>false</DependencyResultOnly>
+        <IProcessStep_Name>{{ user_name }}</IProcessStep_Name>
+        <LuminanceScale>Gray2048</LuminanceScale>
+        <LuminanceScaleRed>0</LuminanceScaleRed>
+        <LuminanceScaleGreen>0</LuminanceScaleGreen>
+        <LuminanceScaleBlue>0</LuminanceScaleBlue>
+        <LuminanceScaleWhite>0</LuminanceScaleWhite>
+        <LuminanceScale_Optimized>false</LuminanceScale_Optimized>
+        <Compression>None</Compression>
+        <RotateTif>None</RotateTif>
+        <ImageBitDepth>12</ImageBitDepth>
+        <Upsample />
+        <UpsampleMethod>Linear</UpsampleMethod>
+        <ShowCorrectionBitmaps>true</ShowCorrectionBitmaps>
+        <WriteResultsToDatabase>false</WriteResultsToDatabase>
+        <SuppliedDemuraAlgorithm>false</SuppliedDemuraAlgorithm>
+        <DisplayPixels>1320,2868</DisplayPixels>
+        <DisplayResolution>0,0</DisplayResolution>
+        <SPRFormat />
+        <PerformDemura>true</PerformDemura>
+        <ExecuteRemotely>false</ExecuteRemotely>
+        <DitherMethod>0</DitherMethod>
+        <TargetDetectorSizeMM>0</TargetDetectorSizeMM>
+        <DarkPixelThreshold>0</DarkPixelThreshold>
+        <MaxCorrection>-0, 0</MaxCorrection>
+        <MaxLocalCorrection>-0, 0</MaxLocalCorrection>
+        <CorrectionOffsets />
+        <GammaMethod>2</GammaMethod>
+        <GammaSmoothSize>0,0</GammaSmoothSize>
+        <CosineCorrection />
+        <BinLevel>0,0</BinLevel>
+        <GradientFilterSize>0,0</GradientFilterSize>
+        <WriteCSVFiles>false</WriteCSVFiles>
+        <XMLTARGETFOISETID>0</XMLTARGETFOISETID>
+        <XMLMASKFOISETID>0</XMLMASKFOISETID>
+        <MeasureFoiCenterPoint>C5</MeasureFoiCenterPoint>
+        <MeasureFoiReportPath>C:\MeasureFOI</MeasureFoiReportPath>
+        <XMLLVFOISETID>0</XMLLVFOISETID>
+        <RGBTransformMethod>sRGB_D65</RGBTransformMethod>
+        <RGB_Gamma>1</RGB_Gamma>
+        <RGBTransform>false</RGBTransform>
+        <UserDefinedRGBTransform />
+        <RgbSaveToDatabase>None</RgbSaveToDatabase>
+        <ImageDataType>Synthetic</ImageDataType>
+        <XYZBitmap>false</XYZBitmap>
+        <SaveNameType>ColorGreyLevel</SaveNameType>
+        <SPR />
+        <CameraType />
+        <CheckPoiStepFialure>false</CheckPoiStepFialure>
+        <EnableDiagnosticLogging>false</EnableDiagnosticLogging>
+        <ForcePreloadDll>false</ForcePreloadDll>
+        <PreloadDelayMs>0</PreloadDelayMs>
+        <ScaleWeightRed>0</ScaleWeightRed>
+        <ScaleWeightGreen>0</ScaleWeightGreen>
+        <ScaleWeightBlue>0</ScaleWeightBlue>
+        <ScaleWeightWhite>0</ScaleWeightWhite>
+        <RunScaling>false</RunScaling>
+        <ScaleMethod>CenterAnchor</ScaleMethod>
+        <HotPixelSigmaThreshold>5</HotPixelSigmaThreshold>
+        <HotPixelLvThreshold>0</HotPixelLvThreshold>
+        <XMLScaleLVFOISETID>0</XMLScaleLVFOISETID>
+        <WriteType>MIM</WriteType>
+        <WriteMemory>true</WriteMemory>
+        <WriteImageDuringCorrWrite>false</WriteImageDuringCorrWrite>
+        <WriteSynDuringCorrWrite>false</WriteSynDuringCorrWrite>
+        <WriteRawDuringCorrWrite>false</WriteRawDuringCorrWrite>
+        <MemDataOrder>ColMajor</MemDataOrder>
+        <PerformDLL>true</PerformDLL>
+        <RecipePath>D:\Non_Documents\Radiant\RECIPE\A264\A264_151MC_United_DBzone_Only_v0p037\A264_151MC_United_DBZONE_v0p037_SIMCA4_2D.ini</RecipePath>
+        <LogPath>D:\DLLLOG</LogPath>
+        <SaveImagePath />
+        <SaveImagePath2 />
+        <SaveImagePrefix />
+        <SaveImagePostfix />
+        <RgbCsvPath />
+        <RgbNumDecimalPts>-1</RgbNumDecimalPts>
+        <RgbScaling>0</RgbScaling>
+        <MimDataDepth>Float_32bit</MimDataDepth>
+        <SyntheticProcessing>Optimized</SyntheticProcessing>
+      </Analysis>
+      <GUID>7c7da7ba-5953-4cc3-8c38-2291686e8f48</GUID>
+    </SequenceItem>
+  
