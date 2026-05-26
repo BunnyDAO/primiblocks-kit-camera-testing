@@ -77,6 +77,16 @@ This is a **forkable** repo. To adapt to a different display-calibration shape (
 
 The framework code (`primiblocks/`) is inherited from PrimiBlocks and should not be touched — submit upstream PRs if the renderer needs a feature.
 
+### A note on `hidden: true` and what it does NOT do
+
+The `display_calibration` template marks 12 primitive-internal vars (`user_name`, `pattern_setup_name`, `tristimulus`, `full_view_mode`, etc.) as `hidden: true` so the `/primi-fill` walkthrough only asks the vision engineer about the 6 vars that genuinely matter per calibration run.
+
+**`hidden: true` is a UX hint, NOT a lockdown.** A hidden var is still a contract var. If someone supplies it directly via `primiblocks render --vars vars.json` (bypassing the skill), the renderer accepts that value and uses it. Hiding only removes the question from the conversational walkthrough — it does **not** seal the value or prevent overrides.
+
+If you want a value to be **truly unoverridable** (e.g., a baked-in constant for your team's calibration standard that no caller — skill, CLI, or future maintainer — can change), don't declare it as a contract var at all. Move it into the primitive body as a plain string literal. Contract vars are knobs by definition; hiding a knob from the UI doesn't make it not-a-knob.
+
+When in doubt, the question to ask is: *"Could a power user legitimately want to override this from the CLI someday?"* If yes → keep it as a var (hidden or visible). If no → bake it as a literal in the primitive body.
+
 ## Limitations
 
 - **No XSD validation against the camera software's schema.** The kit emits structurally valid XML matching the reference file's shape, but doesn't verify against an XSD. To add: drop a post-render check into your workflow (or wait for PrimiBlocks post-render hooks, planned for v0.3.0).
